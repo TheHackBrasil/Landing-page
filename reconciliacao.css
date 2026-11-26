@@ -1,0 +1,708 @@
+/* ==========================================================================
+   FORSETI · RECONCILIAÇÃO — seções 02 a 06
+   Gramática do brandbook: blocos autônomos atravessados por quatro linhas
+   harmônicas. Movimento como evidência: surgir, conectar, propagar,
+   estabilizar. Petróleo profundo, papel mineral, lavanda como intervenção.
+   ========================================================================== */
+
+:root {
+  --petroleo-fundo: #0B211D;
+  --petroleo-fundo-2: #0A1D1A;
+  --petroleo-tinta: #163C38;
+  --papel: #F5F2EB;
+  --papel-2: #EDE9DF;
+  --lavanda: #D7C5EA;
+  --lavanda-tinta: #8F6FC9;
+  --cinza-mineral: #52665E;
+  --tinta-clara: #E9E4D8;
+  --tinta-media: #9DB8AF;
+  --rec-e: cubic-bezier(0.22, 0.9, 0.24, 1);
+}
+
+/* --------------------------------------------------------------------------
+   Transições de papel rasgado (fronteiras entre o mundo claro e o escuro)
+   -------------------------------------------------------------------------- */
+
+.paper-tear {
+  position: relative;
+  z-index: 30;
+  line-height: 0;
+  pointer-events: none;
+}
+
+.paper-tear img {
+  display: block;
+  width: 100%;
+  height: clamp(4.5rem, 8vw, 9rem);
+  object-fit: fill;
+}
+
+.paper-tear--into-dark {
+  margin-bottom: calc(clamp(4.5rem, 8vw, 9rem) * -0.55);
+  transform: translateY(-45%);
+  filter: drop-shadow(0 10px 22px rgba(8, 20, 17, 0.35));
+}
+
+.paper-tear--into-light {
+  margin-top: calc(clamp(4.5rem, 8vw, 9rem) * -0.72);
+  filter: drop-shadow(0 -8px 18px rgba(8, 20, 17, 0.3));
+}
+
+/* --------------------------------------------------------------------------
+   SEÇÃO 02 · A RECONCILIAÇÃO (pin, quatro tempos)
+   -------------------------------------------------------------------------- */
+
+.rec-section {
+  position: relative;
+  background: var(--petroleo-fundo);
+}
+
+.rec-stage {
+  position: relative;
+  height: 100vh;
+  height: 100svh;
+  overflow: hidden;
+  background:
+    radial-gradient(120% 90% at 78% 30%, #12302B 0%, var(--petroleo-fundo) 58%),
+    var(--petroleo-fundo);
+}
+
+/* textura de pedra polida, quase imperceptível */
+.rec-stone {
+  position: absolute;
+  inset: 0;
+  background-image: url("assets/marmore-forseti.webp");
+  background-size: cover;
+  background-position: center;
+  opacity: 0.05;
+  mix-blend-mode: luminosity;
+  pointer-events: none;
+}
+
+/* --- a mesa de reconciliação -------------------------------------------- */
+
+.rec-tableau {
+  position: absolute;
+  inset: 0;
+  opacity: calc(1 - min(max((var(--sc-p, 0) - 0.76) / 0.12, 0), 1) * 0.72);
+  transform: scale(calc(1 - min(max((var(--sc-p, 0) - 0.76) / 0.12, 0), 1) * 0.06));
+  transform-origin: 62% 50%;
+}
+
+/* as quatro linhas harmônicas: desenham-se durante o tempo CONECTAR */
+.rec-lines {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+.rec-line {
+  fill: none;
+  stroke: var(--lavanda);
+  stroke-width: 1.4;
+  stroke-linecap: round;
+  stroke-dasharray: 1;
+  opacity: 0.85;
+  filter: drop-shadow(0 0 6px rgba(215, 197, 234, 0.35));
+}
+
+.rec-line--1 { stroke-dashoffset: calc(1 - min(max((var(--sc-p, 0) - 0.260) / 0.20, 0), 1)); }
+.rec-line--2 { stroke-dashoffset: calc(1 - min(max((var(--sc-p, 0) - 0.285) / 0.20, 0), 1)); }
+.rec-line--3 { stroke-dashoffset: calc(1 - min(max((var(--sc-p, 0) - 0.310) / 0.20, 0), 1)); }
+.rec-line--4 { stroke-dashoffset: calc(1 - min(max((var(--sc-p, 0) - 0.335) / 0.20, 0), 1)); }
+
+/* --- os documentos autônomos --------------------------------------------- */
+
+.rec-doc {
+  position: absolute;
+  width: clamp(13rem, 17vw, 16.5rem);
+  background: var(--papel);
+  color: var(--petroleo-tinta);
+  border-radius: 3px;
+  padding: 0.85rem 1rem 1rem;
+  box-shadow:
+    0 1px 0 rgba(245, 242, 235, 0.08) inset,
+    0 18px 40px rgba(4, 12, 10, 0.5),
+    0 3px 10px rgba(4, 12, 10, 0.4);
+  font-size: clamp(0.62rem, 0.72vw, 0.74rem);
+  opacity: min(max((var(--sc-p, 0) - var(--doc-at, 0.03)) / 0.07, 0), 1);
+}
+
+.rec-doc--nfe       { --doc-at: 0.035; top: 13%; left: 5%;  transform: rotate(-2.4deg); }
+.rec-doc--cte       { --doc-at: 0.065; top: 12%;  right: 5%; transform: rotate(1.8deg); }
+.rec-doc--planilha  { --doc-at: 0.095; bottom: 22%; left: 9%; transform: rotate(1.4deg); }
+.rec-doc--canal     {
+  --doc-at: 0.53;
+  bottom: 20%;
+  right: 7%;
+  width: clamp(14rem, 19vw, 18rem);
+  transform: rotate(-1.2deg);
+  background: #EFEAF6;
+  border: 1px solid rgba(143, 111, 201, 0.35);
+}
+
+.rec-doc header {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 0.5rem;
+  padding-bottom: 0.55rem;
+  margin-bottom: 0.55rem;
+  border-bottom: 1px solid rgba(22, 60, 56, 0.18);
+}
+
+.rec-doc-tag {
+  font-family: "Geist Mono", ui-monospace, monospace;
+  font-size: 0.72em;
+  letter-spacing: 0.06em;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.rec-doc-src {
+  font-family: "Geist Mono", ui-monospace, monospace;
+  font-size: 0.6em;
+  letter-spacing: 0.03em;
+  color: var(--cinza-mineral);
+}
+
+.rec-doc-line {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding: 0.18rem 0.3rem;
+  margin: 0;
+  border-radius: 2px;
+}
+
+.rec-doc-line span { color: var(--cinza-mineral); }
+.rec-doc-line strong { font-weight: 650; }
+
+.rec-doc-barcode {
+  margin-top: 0.7rem;
+  height: 1.4rem;
+  background: repeating-linear-gradient(90deg,
+    var(--petroleo-tinta) 0 2px, transparent 2px 4px,
+    var(--petroleo-tinta) 4px 5px, transparent 5px 9px,
+    var(--petroleo-tinta) 9px 12px, transparent 12px 14px);
+  opacity: 0.75;
+}
+
+.rec-sheet p {
+  display: grid;
+  grid-template-columns: 3.2em 1fr auto;
+  gap: 0.5rem;
+  margin: 0;
+  padding: 0.22rem 0.3rem;
+  font-family: "Geist Mono", ui-monospace, monospace;
+  font-size: 0.72em;
+  border-bottom: 1px solid rgba(22, 60, 56, 0.12);
+}
+
+.rec-canal-msg {
+  margin: 0 0 0.5rem;
+  font-size: 0.9em;
+  line-height: 1.45;
+}
+
+.rec-canal-msg:last-child { margin-bottom: 0; }
+
+.rec-canal-who {
+  display: block;
+  font-family: "Geist Mono", ui-monospace, monospace;
+  font-size: 0.62em;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--lavanda-tinta);
+  margin-bottom: 0.15rem;
+}
+
+/* divergências: acendem em lavanda quando a linha as atravessa */
+.rec-div {
+  position: relative;
+  transition: none;
+}
+
+.rec-div strong,
+.rec-div {
+  background: linear-gradient(rgba(215, 197, 234, 0.0), rgba(215, 197, 234, 0.0));
+}
+
+.rec-div {
+  box-shadow: 0 0 0 0 rgba(215, 197, 234, 0);
+  --ign: min(max((var(--sc-p, 0) - var(--at, 0.45)) / 0.03, 0), 1);
+  background: rgba(215, 197, 234, calc(var(--ign) * 0.9));
+  outline: calc(var(--ign) * 1.5px) solid rgba(143, 111, 201, calc(var(--ign) * 0.85));
+}
+
+/* setores que recebem o contexto propagado */
+.rec-setores {
+  position: absolute;
+  left: 50%;
+  bottom: 4%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 0.6rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.rec-setores li {
+  font-family: "Geist Mono", ui-monospace, monospace;
+  font-size: clamp(0.6rem, 0.68vw, 0.72rem);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--petroleo-tinta);
+  background: var(--lavanda);
+  padding: 0.4rem 0.8rem;
+  border-radius: 2px;
+  --ign: min(max((var(--sc-p, 0) - var(--at, 0.6)) / 0.04, 0), 1);
+  opacity: var(--ign);
+  transform: translateY(calc((1 - var(--ign)) * 10px));
+  box-shadow: 0 6px 18px rgba(4, 12, 10, 0.4);
+}
+
+/* --- os quatro tempos (copy) --------------------------------------------- */
+
+.rec-beat {
+  position: absolute;
+  left: clamp(1.25rem, 5vw, 5rem);
+  top: 50%;
+  transform: translateY(-50%);
+  max-width: min(30rem, 38vw);
+  z-index: 5;
+}
+
+.rec-beat h2 {
+  margin: 0 0 1rem;
+  font-size: clamp(1.7rem, 3.2vw, 2.9rem);
+  line-height: 1.08;
+  letter-spacing: -0.015em;
+  font-weight: 640;
+  color: var(--tinta-clara);
+  text-wrap: balance;
+}
+
+.rec-beat p:not(.rec-kicker) {
+  margin: 0;
+  font-size: clamp(0.95rem, 1.05vw, 1.08rem);
+  line-height: 1.6;
+  color: var(--tinta-media);
+  max-width: 34em;
+}
+
+.rec-kicker {
+  display: flex;
+  align-items: baseline;
+  gap: 0.7rem;
+  margin: 0 0 1.1rem;
+  font-size: clamp(0.62rem, 0.7vw, 0.72rem);
+  letter-spacing: 0.14em;
+  color: var(--lavanda);
+}
+
+.rec-chapter {
+  color: var(--tinta-media);
+  border: 1px solid rgba(215, 197, 234, 0.35);
+  padding: 0.15rem 0.45rem;
+  border-radius: 2px;
+}
+
+/* beats 2+ sobrepõem os documentos: um véu de leitura atrás da copy */
+.rec-beat--2, .rec-beat--3, .rec-beat--4 {
+  padding: 1.5rem 1.75rem;
+  margin-left: -1.75rem;
+  background: linear-gradient(100deg, rgba(11, 33, 29, 0.92) 55%, rgba(11, 33, 29, 0));
+  border-radius: 4px;
+}
+
+/* posição de cada tempo para compor com a mesa */
+.rec-beat--1 { top: 30%; }
+.rec-beat--3 { top: 42%; }
+
+/* --- o produto real, estabilizado ---------------------------------------- */
+
+.rec-product {
+  position: absolute;
+  right: clamp(1.5rem, 5vw, 5rem);
+  top: 50%;
+  transform: translateY(-50%);
+  width: min(46rem, 52vw);
+  margin: 0;
+  z-index: 6;
+}
+
+.rec-product img {
+  display: block;
+  width: 100%;
+  max-height: 76vh;
+  object-fit: cover;
+  object-position: top left;
+  border-radius: 4px;
+  border: 1px solid rgba(245, 242, 235, 0.14);
+  box-shadow:
+    0 40px 90px rgba(3, 10, 8, 0.65),
+    0 8px 26px rgba(3, 10, 8, 0.5);
+}
+
+.rec-product figcaption {
+  margin-top: 0.8rem;
+  font-size: 0.62rem;
+  letter-spacing: 0.14em;
+  color: var(--tinta-media);
+  text-align: right;
+}
+
+/* --------------------------------------------------------------------------
+   SEÇÃO 03 · O CASO (panorama horizontal)
+   -------------------------------------------------------------------------- */
+
+.caso-section {
+  position: relative;
+  background: var(--petroleo-fundo-2);
+}
+
+.caso-stage {
+  position: relative;
+  height: 100vh;
+  height: 100svh;
+  overflow: hidden;
+  background:
+    radial-gradient(100% 120% at 50% 110%, #0F2924 0%, var(--petroleo-fundo-2) 60%),
+    var(--petroleo-fundo-2);
+}
+
+.caso-rail {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  display: flex;
+  align-items: stretch;
+  gap: clamp(3rem, 6vw, 7rem);
+  padding: 0 18vw 0 8vw;
+  width: max-content;
+  will-change: transform;
+}
+
+/* a fita asfáltica que liga as estações */
+.caso-road {
+  position: absolute;
+  left: -8vw;
+  right: -8vw;
+  bottom: 24%;
+  height: clamp(4.6rem, 8vh, 6.2rem);
+  background: linear-gradient(180deg, #12211E 0%, #0C1A17 100%);
+  border-top: 1px solid rgba(245, 242, 235, 0.07);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.45);
+  z-index: 0;
+}
+
+.caso-road-line {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 50%;
+  height: 2px;
+  transform: translateY(-50%);
+  background: repeating-linear-gradient(90deg,
+    rgba(245, 242, 235, 0.5) 0 2.2rem,
+    transparent 2.2rem 4.4rem);
+  opacity: 0.5;
+}
+
+/* estações alternam lado da estrada */
+.caso-intro, .caso-stop, .caso-outro {
+  position: relative;
+  z-index: 2;
+  align-self: center;
+  flex: 0 0 auto;
+}
+
+.caso-intro {
+  width: min(34rem, 78vw);
+  align-self: center;
+}
+
+.caso-intro h2 {
+  margin: 0 0 1.1rem;
+  font-size: clamp(1.9rem, 3.4vw, 3.1rem);
+  line-height: 1.06;
+  letter-spacing: -0.015em;
+  font-weight: 640;
+  color: var(--tinta-clara);
+}
+
+.caso-arrow { color: var(--lavanda); }
+
+.caso-intro p:not(.mono) {
+  margin: 0 0 1.4rem;
+  color: var(--tinta-media);
+  line-height: 1.6;
+  font-size: clamp(0.95rem, 1.05vw, 1.08rem);
+  max-width: 32em;
+}
+
+.caso-hint {
+  color: var(--lavanda);
+  font-size: 0.66rem;
+  letter-spacing: 0.18em;
+  opacity: 0.8;
+}
+
+.caso-stop {
+  width: min(24rem, 74vw);
+}
+
+.caso-stop--nfe    { transform: translateY(-9vh); }
+.caso-stop--cte    { transform: translateY(7vh); }
+.caso-stop--busca  { transform: translateY(-8vh); }
+.caso-stop--torre  { transform: translateY(8vh); }
+.caso-stop--balanco{ transform: translateY(-7vh); }
+
+/* marco quilométrico */
+.caso-post {
+  display: flex;
+  gap: 1rem;
+  align-items: baseline;
+  margin-bottom: 0.7rem;
+  padding-left: 0.9rem;
+  border-left: 2px solid var(--lavanda);
+  font-size: clamp(0.62rem, 0.72vw, 0.74rem);
+  letter-spacing: 0.1em;
+  color: var(--lavanda);
+}
+
+.caso-post span + span { color: var(--tinta-media); }
+
+.caso-card {
+  background: rgba(245, 242, 235, 0.045);
+  border: 1px solid rgba(245, 242, 235, 0.1);
+  border-radius: 4px;
+  padding: clamp(1.2rem, 1.8vw, 1.7rem);
+  backdrop-filter: blur(4px);
+}
+
+.caso-card h3 {
+  margin: 0 0 0.7rem;
+  font-size: clamp(1.15rem, 1.5vw, 1.45rem);
+  font-weight: 640;
+  letter-spacing: -0.01em;
+  color: var(--tinta-clara);
+}
+
+.caso-card > p {
+  margin: 0 0 1.1rem;
+  color: var(--tinta-media);
+  line-height: 1.58;
+  font-size: clamp(0.86rem, 0.95vw, 0.97rem);
+}
+
+/* evidências: cada estação prova o que afirma */
+.caso-evidence {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  background: var(--papel);
+  color: var(--petroleo-tinta);
+  border-radius: 3px;
+  padding: 0.8rem 1rem;
+  font-size: clamp(0.72rem, 0.8vw, 0.82rem);
+  box-shadow: 0 10px 26px rgba(3, 10, 8, 0.45);
+  transform: rotate(-0.6deg);
+}
+
+.caso-evidence .mono {
+  font-size: 0.66em;
+  letter-spacing: 0.12em;
+  color: var(--cinza-mineral);
+}
+
+.caso-evidence b { font-weight: 680; }
+
+.caso-evidence--diverge b {
+  background: rgba(215, 197, 234, 0.85);
+  outline: 1px solid rgba(143, 111, 201, 0.7);
+  padding: 0 0.25rem;
+  border-radius: 2px;
+}
+
+.caso-evidence--voice { transform: rotate(0.5deg); background: #EFEAF6; }
+
+.caso-evidence-verdict b { color: var(--lavanda-tinta); }
+
+.caso-evidence--tasks b { font-size: 1.15em; }
+
+.caso-outro {
+  width: min(20rem, 60vw);
+  align-self: center;
+}
+
+.caso-outro .mono {
+  font-size: 0.62rem;
+  letter-spacing: 0.14em;
+  color: var(--lavanda);
+  margin: 0 0 0.6rem;
+}
+
+.caso-outro p:not(.mono) {
+  color: var(--tinta-media);
+  font-size: 0.85rem;
+  line-height: 1.5;
+  margin: 0;
+}
+
+/* --------------------------------------------------------------------------
+   SEÇÃO 04 · PARA QUEM (papel, editorial)
+   -------------------------------------------------------------------------- */
+
+#para-quem {
+  background: var(--papel);
+}
+
+/* --------------------------------------------------------------------------
+   Mobile: a mesa simplifica, a estrada continua
+   -------------------------------------------------------------------------- */
+
+@media (max-width: 860px) {
+  .rec-beat {
+    max-width: calc(100vw - 2.5rem);
+    left: 1.25rem;
+    right: 1.25rem;
+  }
+
+  .rec-beat--1 { top: 24%; }
+  .rec-beat--2, .rec-beat--3, .rec-beat--4 {
+    top: auto;
+    bottom: 12%;
+    transform: none;
+    padding: 1.1rem 1.25rem;
+    margin-left: 0;
+    background: rgba(11, 33, 29, 0.9);
+    border: 1px solid rgba(245, 242, 235, 0.08);
+  }
+
+  .rec-beat h2 { font-size: clamp(1.4rem, 6.4vw, 1.9rem); }
+  .rec-beat p:not(.rec-kicker) { font-size: 0.92rem; }
+
+  .rec-doc {
+    width: clamp(8.5rem, 33vw, 11rem);
+    font-size: 0.54rem;
+    padding: 0.55rem 0.65rem 0.65rem;
+  }
+
+  .rec-doc--nfe      { top: 13%;  left: 3%; }
+  .rec-doc--cte      { top: 13%;  right: 3%; }
+  .rec-doc--planilha { top: 42%; bottom: auto; left: 4%; }
+  .rec-doc--canal    { top: 42%; bottom: auto; right: 3%; width: clamp(9rem, 36vw, 12rem); }
+
+  .rec-setores { bottom: 24%; flex-wrap: wrap; justify-content: center; width: 90%; }
+
+  .rec-product {
+    width: calc(100vw - 2.5rem);
+    right: 1.25rem;
+    top: 8%;
+    transform: none;
+  }
+
+  .rec-product img { max-height: 52vh; }
+
+  .caso-rail { gap: 2.5rem; padding: 0 6vw; }
+  .caso-stop { width: min(19rem, 78vw); }
+  .caso-stop--nfe, .caso-stop--cte, .caso-stop--busca, .caso-stop--torre, .caso-stop--balanco {
+    transform: translateY(-4vh);
+  }
+  .caso-road { bottom: 10%; }
+}
+
+/* --------------------------------------------------------------------------
+   Movimento reduzido: as linhas e divergências já nascem reveladas
+   -------------------------------------------------------------------------- */
+
+@media (prefers-reduced-motion: reduce) {
+  .rec-line { stroke-dashoffset: 0 !important; }
+  .rec-doc, .rec-setores li { opacity: 1 !important; transform: none; }
+  .rec-div { --ign: 1; }
+  .rec-setores li { --ign: 1; }
+  .rec-tableau { opacity: 1; transform: none; }
+}
+
+/* --------------------------------------------------------------------------
+   SEÇÃO 04 · monólitos de pedra, não cartões de SaaS
+   -------------------------------------------------------------------------- */
+
+.fit-monoliths {
+  align-items: start;
+}
+
+.fit-monolith {
+  border-radius: 3px;
+  border: 1px solid rgba(22, 60, 56, 0.16);
+  border-top: 5px solid var(--petroleo-tinta);
+  background:
+    linear-gradient(180deg, rgba(245, 242, 235, 0.6), rgba(245, 242, 235, 0)),
+    #FBFAF6;
+  box-shadow: 0 2px 0 rgba(22, 60, 56, 0.05), 0 18px 40px rgba(22, 60, 56, 0.08);
+}
+
+.fit-monolith:nth-child(2) {
+  margin-top: clamp(1.6rem, 3vw, 3rem);
+  border-top-color: var(--lavanda-tinta);
+}
+
+.fit-monolith:nth-child(3) {
+  margin-top: clamp(3.2rem, 6vw, 6rem);
+}
+
+.fit-monolith:hover {
+  transform: translateY(-4px);
+  border-color: rgba(22, 60, 56, 0.4);
+  border-top-color: var(--petroleo-tinta);
+}
+
+.fit-monolith:nth-child(2):hover { border-top-color: var(--lavanda-tinta); }
+
+.fit-monolith h3 {
+  font-family: "Manrope", sans-serif;
+  font-weight: 680;
+  letter-spacing: -0.01em;
+}
+
+.monolith-id { color: var(--cinza-mineral); }
+
+.monolith-features li::before {
+  color: var(--lavanda-tinta) !important;
+}
+
+.fit-honest {
+  margin-top: clamp(2.5rem, 5vw, 4.5rem);
+  padding: clamp(1.2rem, 2vw, 1.8rem) 0 0;
+  border-top: 1px solid rgba(22, 60, 56, 0.18);
+  display: grid;
+  grid-template-columns: minmax(10rem, 14rem) 1fr;
+  gap: clamp(1rem, 3vw, 3rem);
+  align-items: baseline;
+}
+
+.fit-honest .mono {
+  font-size: 0.64rem;
+  letter-spacing: 0.14em;
+  color: var(--lavanda-tinta);
+  margin: 0;
+}
+
+.fit-honest p:not(.mono) {
+  margin: 0;
+  color: var(--cinza-mineral);
+  line-height: 1.6;
+  font-size: 0.95rem;
+  max-width: 46em;
+}
+
+@media (max-width: 860px) {
+  .fit-monolith:nth-child(2), .fit-monolith:nth-child(3) { margin-top: 0; }
+  .fit-honest { grid-template-columns: 1fr; gap: 0.5rem; }
+}

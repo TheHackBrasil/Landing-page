@@ -1,0 +1,610 @@
+﻿<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#F5F2EB">
+  <meta name="description" content="Centralize a visibilidade de todas as suas transportadoras. A Forseti conecta notas fiscais, portais e agentes autônomos que buscam o status da carga onde ela estiver.">
+  <meta property="og:title" content="Forseti — Visibilidade e Coordenação de Entregas B2B">
+  <meta property="og:description" content="15 transportadoras na rota e zero visibilidade? A Forseti busca a previsão real da entrega e avisa sua equipe antes que o atraso vire prejuízo.">
+  <title>Forseti — Visibilidade e Coordenação de Entregas B2B</title>
+  <link rel="preload" href="assets/manrope.ttf" as="font" type="font/ttf" crossorigin>
+  <style>
+/* OD-LAYOUT-PRIMITIVES v1 — structure only: display, flex/grid, overflow, wrapping, ratio, geometry.
+   Put this @layer first; product CSS outside the layer wins ordinary layout rules.
+   Native hidden and closed-dialog states take precedence over component display rules. */
+@layer od-layout {
+  [hidden]:not([hidden="until-found" i]) { display: none !important; }
+  dialog:not([open]) { display: none !important; }
+
+  :where(.od-stack,.od-row,.od-row-top,.od-cluster,.od-grid,.od-field,.od-stat,.od-cell,.od-tile) > :where(*) { min-width: 0; }
+
+  /* containers */
+  .od-stack   { display: flex; flex-direction: column; gap: var(--od-gap, 8px); }
+  .od-row     { display: flex; align-items: center; gap: var(--od-gap, 8px); }
+  .od-row-top { display: flex; align-items: flex-start; gap: var(--od-gap, 8px); }
+  .od-cluster { display: flex; flex-wrap: wrap; align-items: center; gap: var(--od-gap, 8px); }
+  .od-fill    { flex: 1 1 0; min-width: 0; }
+  .od-fixed   { flex: none; }
+  .od-grid    { display: grid; gap: var(--od-gap, 12px); grid-template-columns: repeat(var(--od-cols, 3), minmax(0, 1fr)); }
+
+  /* stacked information: each piece is its own line — never sibling inline spans */
+  .od-stat, .od-field, .od-cell { display: grid; gap: var(--od-gap, 2px); }
+  :where(.od-stat,.od-field,.od-cell) > :where(*) { display: block; }
+  .od-tile { display: grid; grid-template-rows: auto 1fr; }
+  :where(.od-tile) > :where(*) { display: block; }
+
+  /* media keeps its intrinsic ratio by default; never a distorted or cropped
+     cover by accident. height:auto lets the ratio win over an <img height="…">
+     attribute. Cropping to a uniform box is an explicit opt-in: set --od-ratio
+     AND add .od-media-cover together (per the core rule, only where a crop is
+     deliberate — tile thumbs, decorative fills — never on full-frame content). */
+  .od-media { display: block; width: 100%; height: auto; aspect-ratio: var(--od-ratio, auto); }
+  .od-media-cover { object-fit: cover; }
+
+  /* functional inline SVG icons opt into bounded geometry; content SVGs keep their own */
+  .od-icon { display: inline-block; inline-size: var(--od-icon-size, 1em); block-size: var(--od-icon-size, 1em); flex: none; }
+
+  /* data text only — authored copy is rewritten to its budget instead */
+  .od-truncate { display: block; max-width: 100%; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+  .od-clamp-2, .od-clamp-3 { display: -webkit-box; -webkit-box-orient: vertical; overflow: hidden; overflow-wrap: anywhere; }
+  .od-clamp-2 { -webkit-line-clamp: 2; }
+  .od-clamp-3 { -webkit-line-clamp: 3; }
+  .od-lines-2 { min-height: calc(2 * 1.4em); }   /* block-level reservation for a shared baseline */
+  .od-nowrap  { white-space: nowrap; }           /* 数字+单位 · 价格+起 · 日期+星期 */
+  .od-keep    { word-break: keep-all; overflow-wrap: anywhere; } /* CJK labels break at spaces / <wbr> first */
+
+  /* screen skeleton (optional): bars take their own space, the middle scrolls — no padding guessed for chrome */
+  .od-screen { display: grid; grid-template-rows: auto minmax(0, 1fr) auto; height: 100%; }
+  .od-scroll { overflow-y: auto; overscroll-behavior: contain; min-height: 0; }
+
+  /* horizontal rail: the next item peeks at the edge; trailing room survives overflow */
+  .od-rail { display: flex; gap: var(--od-gap, 8px); overflow-x: auto; scroll-snap-type: x proximity; scrollbar-width: none;
+             padding-inline: var(--od-rail-pad, 16px); scroll-padding-inline: var(--od-rail-pad, 16px); }
+  .od-rail::-webkit-scrollbar { display: none; }
+  :where(.od-rail) > :where(*) { flex: none; scroll-snap-align: start; }
+  :where(.od-rail) > :where(:last-child) { margin-inline-end: var(--od-rail-pad, 16px); }
+
+  .od-spacer { flex: none; visibility: hidden; pointer-events: none; }
+  .od-touch  { min-width: 44px; min-height: 44px; }
+}
+:root [hidden]:where(:not([hidden="until-found" i])) { display: none; }
+/* /OD-LAYOUT-PRIMITIVES v1 */
+  </style>
+  <link rel="stylesheet" href="styles.css?v=secao03-refino-5">
+  <link rel="stylesheet" href="gargalo.css?v=templo-10">
+  <link rel="stylesheet" href="renaissance-signals.css?v=tear-shopify-1">
+  <link rel="stylesheet" href="signal-scroll.css?v=clear-2">
+  <link rel="stylesheet" href="reconciliacao.css?v=rec-1">
+  <script src="script.js?v=secao03-1" defer></script>
+  <script src="gargalo.js?v=templo-3" defer></script>
+  <script src="assets/forseti-stickers.js?v=truck-2" defer></script>
+  <script src="signal-scroll.js?v=clear-2" defer></script>
+  <script src="assets/three-r187.min.js" defer></script>
+  <script src="assets/hero-logistics-data.js" defer></script>
+  <script src="logistics-three.js" defer></script>
+  <script src="hero-logistica.js?v=hero-nuvens-1" defer></script>
+  <link rel="stylesheet" href="assets/scrollcraft.css">
+</head>
+<body id="inicio">
+  <svg xmlns="http://www.w3.org/2000/svg" class="symbol-bank" aria-hidden="true" width="0" height="0">
+    <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M4 12h15m-6-6 6 6-6 6"/></symbol>
+    <symbol id="i-down" viewBox="0 0 24 24"><path d="M12 4v15m-6-6 6 6 6-6"/></symbol>
+    <symbol id="i-up" viewBox="0 0 24 24"><path d="M12 20V5m-6 6 6-6 6 6"/></symbol>
+    <symbol id="i-plus" viewBox="0 0 24 24"><path d="M5 12h14m-7-7v14"/></symbol>
+    <symbol id="i-menu" viewBox="0 0 24 24"><path d="M4 8h16M4 16h16"/></symbol>
+    <symbol id="i-close" viewBox="0 0 24 24"><path d="m6 6 12 12M18 6 6 18"/></symbol>
+  </svg>
+  <a class="skip-link" href="#conteudo">Ir para o conteúdo</a>
+
+  <header class="site-header">
+    <div class="shell header-inner">
+      <a class="brand" href="#inicio" aria-label="Forseti, início"><img src="assets/forseti-logo-petroleo.svg" width="1460" height="356" alt="Forseti"></a>
+      <button id="menu-toggle" class="menu-toggle" type="button" aria-controls="navegacao" aria-expanded="false" hidden>
+        <svg class="od-icon" aria-hidden="true"><use href="#i-menu"/></svg><span>Menu</span>
+      </button>
+      <nav id="navegacao" class="site-nav" aria-label="Navegação principal">
+        <a href="#problema">O gargalo real</a>
+        <a href="#como-funciona">Como funciona</a>
+        <a href="#caso">Caso prático</a>
+        <a href="#para-quem">Na sua operação</a>
+        <a href="#faq">Perguntas frequentes</a>
+      </nav>
+      <a class="button button-compact header-cta" href="#contato">Conversar sobre minha operação <svg class="od-icon" aria-hidden="true"><use href="#i-arrow"/></svg></a>
+    </div>
+    <div class="reading-progress" aria-hidden="true"></div>
+  </header>
+
+  <main id="conteudo">
+    <section class="hero" aria-labelledby="hero-title">
+      <div class="hero-stage">
+        <picture class="hero-sky" aria-hidden="true">
+          <source media="(orientation: portrait)" srcset="assets/hero-ceu-retrato.webp">
+          <img src="assets/hero-ceu-paisagem.webp" alt="" fetchpriority="high" width="1672" height="941">
+        </picture>
+        <div class="hero-layout shell">
+          <div class="hero-copy">
+            <div>
+              <p class="eyebrow"><span class="harmonic-mark" aria-hidden="true"></span> VISIBILIDADE E COORDENAÇÃO DE ENTREGAS B2B</p>
+              <h1 id="hero-title">Quando a carga atrasa na estrada,<br>sua equipe não deveria <em>caçar status no escuro.</em></h1>
+            </div>
+            <div class="hero-intro">
+              <p class="lead">A Forseti conecta seus pedidos às transportadoras e busca a previsão real de entrega — por documentos fiscais, portais e agentes autônomos que contatam quem está na rota. Visibilidade centralizada e auditável, sem sua equipe perder o dia no telefone.</p>
+              <div class="hero-actions od-cluster">
+                <a class="button" href="#contato">Conversar sobre minha operação <svg class="od-icon" aria-hidden="true"><use href="#i-arrow"/></svg></a>
+                <a class="text-link" href="#caso">Ver o caso em ação <svg class="od-icon" aria-hidden="true"><use href="#i-down"/></svg></a>
+              </div>
+            </div>
+          </div>
+          <div class="hero-landscape" data-scene>
+            <canvas id="logistics-canvas" class="logistics-canvas" role="img"
+                    aria-label="Três maquetes isométricas ligadas por um raio em órbita. No centro, duas empilhadeiras circulam no galpão em corte."
+                    hidden></canvas>
+            <p class="logistics-unavailable" id="logistics-unavailable" role="status" hidden>
+              A cena 3D precisa de um navegador com WebGL 2.
+            </p>
+            <noscript><p class="logistics-unavailable">Ative o JavaScript para explorar a cena 3D.</p></noscript>
+          </div>
+        </div>
+        <div class="hero-clouds" aria-hidden="true"></div>
+      </div>
+    </section>
+
+    <section class="connection" aria-labelledby="connection-title">
+      <div class="connection-stage">
+        <div class="connection-heading"><p class="connection-kicker">PESSOAS + INTELIGÊNCIA</p><h2 id="connection-title">A tecnologia aproxima.<br><em>Você decide.</em></h2><p>A Forseti reúne as informações da sua operação para sua equipe agir com mais clareza.</p></div>
+        <div class="connection-hands" aria-hidden="true"><img class="connection-hand human" src="assets/maos-conexao.png" alt=""><img class="connection-hand robot" src="assets/maos-conexao.png" alt=""><span class="connection-glow"></span></div>
+        <div class="connection-reveal"><p class="connection-kicker">SUA OPERAÇÃO EM UM SÓ LUGAR</p><h3>Visibilidade para agir no momento certo.</h3><div class="connection-screen"><img src="assets/sistema-forseti.png" alt="Tela da Forseti com informações de um pedido, previsão de entrega e tarefas abertas" width="1439" height="818" decoding="async"></div><a class="button" href="#contato">Conversar sobre minha operação <svg class="od-icon" aria-hidden="true"><use href="#i-arrow"/></svg></a></div>
+      </div>
+    </section>
+
+    <section class="section shell dispatch" id="problema" aria-labelledby="problema-title">
+      <header class="dispatch-opening" id="hero-case">
+          <p class="eyebrow"><span class="chapter-index">01</span> O GARGALO REAL</p>
+          <h2 id="problema-title">Você contrata 10 transportadoras diferentes.<br>E passa o dia no WhatsApp tentando achar a carga.</h2>
+      </header>
+      <div class="dispatch-layout">
+        <div class="dispatch-art dispatch-stage" aria-label="Celular mostrando uma conversa de cobrança sobre uma carga sem atualização">
+          <div class="dispatch-note note-customer">
+            <small>CLIENTE <time>08:42</time></small>
+            <p>Vocês conseguem confirmar onde está a carga? O cliente está esperando.</p>
+          </div>
+          <div class="dispatch-note note-dock">
+            <small>DOCA <time>09:15</time></small>
+            <p>O caminhão não chegou. Ainda mantemos a equipe no recebimento?</p>
+          </div>
+          <div class="dispatch-note note-sales">
+            <small>COMERCIAL <time>10:30</time></small>
+            <p>Preciso responder ao cliente, mas o rastreio não atualiza.</p>
+          </div>
+          <div class="dispatch-note note-ops">
+            <small>OPERAÇÃO <time>11:05</time></small>
+            <p>Alguém já conseguiu falar com a filial ou com o motorista?</p>
+          </div>
+          <div class="dispatch-note note-carrier">
+            <small>TRANSPORTADORA <time>12:20</time></small>
+            <p>O motorista não atende. Assim que ele retornar, eu aviso.</p>
+          </div>
+          <div class="dispatch-note note-finance">
+            <small>FINANCEIRO <time>14:05</time></small>
+            <p>Sem comprovação de horário, a diária entra na fatura.</p>
+          </div>
+          <div class="dispatch-note note-warehouse"><small>ARMAZÉM <time>09:22</time></small><p>Posso liberar a doca ou espero mais um pouco?</p></div>
+          <div class="dispatch-note note-planning"><small>PLANEJAMENTO <time>10:18</time></small><p>Essa peça chega antes da troca de turno?</p></div>
+          <div class="dispatch-note note-branch"><small>FILIAL <time>11:12</time></small><p>O volume ficou aqui ou seguiu para Campinas?</p></div>
+          <div class="dispatch-device">
+            <div class="dispatch-frame" aria-hidden="true"></div>
+            <div class="dispatch-back" aria-hidden="true"><div class="case-print"></div><div class="camera-module"><i></i><i></i></div></div>
+            <div class="dispatch-glass">
+              <div class="dispatch-status"><span>9:41</span><i aria-hidden="true"></i><span>5G ▰</span></div>
+              <div class="dispatch-bar">
+                <span aria-hidden="true">‹</span>
+                <span class="dispatch-avatar" aria-hidden="true">T</span>
+                <div><strong>Transportadora</strong><small class="dispatch-presence">online</small></div>
+                <span aria-hidden="true">⋮</span>
+              </div>
+              <div class="dispatch-wall">
+                <p class="dispatch-day">HOJE</p>
+                <div class="dispatch-messages">
+                  <p class="sent">Oi! Preciso de uma posição da carga NF-e 3526. O cliente está cobrando.<time>08:42</time></p>
+                  <p>Bom dia. Vou confirmar com o motorista.<time>08:47</time></p>
+                  <p class="sent">Consegue me dizer onde ele está e a previsão de chegada?<time>09:06</time></p>
+                  <p>Ainda não consegui retorno. Pode aguardar?<time>09:38</time></p>
+                  <p class="sent">Preciso avisar o CD. A doca está reservada para 10h.<time>10:12</time></p>
+                  <p>Sem posição confirmada por enquanto.<time>10:41</time></p>
+                </div>
+              </div>
+              <div class="dispatch-composer"><span class="dispatch-draft">Mensagem</span><span class="dispatch-send" aria-hidden="true">➤</span></div>
+              <span class="dispatch-home" aria-hidden="true"></span>
+            </div>
+            <img class="dispatch-touch" src="assets/chat-touch.webp" width="900" height="675" alt="" aria-hidden="true">
+            <span class="dispatch-touch-ring" aria-hidden="true"></span>
+          </div>
+          <button class="dispatch-pause" type="button" aria-label="Pausar conversa"><span class="dispatch-play-icon" aria-hidden="true"></span><span data-pause-label>Pausar conversa</span></button>
+        </div>
+        <div class="dispatch-copy">
+          <p class="lead">Para atender diferentes regiões, prazos e tipos de frete, sua operação depende de <mark>múltiplos parceiros</mark>. Mas a maioria é arcaica: não tem API, não tem portal atualizado e <mark>só responde por telefone</mark>. Quando o cliente cobra a entrega ou a fábrica precisa do insumo, começa a <mark>caça manual por informação</mark>.</p>
+          <a class="text-link" href="#como-funciona">Ver como a Forseti resolve <svg class="od-icon" aria-hidden="true"><use href="#i-down"/></svg></a>
+        </div>
+      </div>
+      <section class="signal-scroll-scene" aria-labelledby="signal-scroll-title">
+        <div class="signal-scroll-viewport" aria-label="Cenário típico de exceção. Role a página para percorrer os três momentos.">
+          <div class="signal-scroll-head">
+            <div>
+              <p class="mono" id="signal-scroll-title">Cenário típico · uma manhã de exceção</p>
+              <p>Uma informação que não chega a tempo muda o dia inteiro.</p>
+            </div>
+            <p class="signal-scroll-cue" aria-hidden="true"><span></span> role para avançar</p>
+          </div>
+          <ol class="signal-grid signal-scroll-track">
+        <li class="signal-card signal-card--cobranca">
+          <span class="folio" aria-hidden="true">I</span>
+          <span class="signal-ghost" aria-hidden="true">POSIÇÃO</span>
+          <div class="sticker-medal"><canvas class="sticker-canvas" data-sticker="cobranca" width="500" height="500" role="img" aria-label="Pergaminho com selo de cera e pena, representando a cobrança do cliente"></canvas></div>
+          <div class="signal-copy">
+          <p class="mono signal-meta">08:42 · O CLIENTE COBRANDO</p>
+          <h3>“Cadê a mercadoria? Já está chegando?”</h3>
+          <p>O cliente liga cobrando a entrega. No sistema consta apenas “em trânsito”; ninguém sabe em qual quilômetro o caminhão está.</p>
+          <p class="signal-note">pendência · posição real da carga</p>
+          </div>
+        </li>
+        <li class="signal-card signal-card--telefone">
+          <span class="folio" aria-hidden="true">II</span>
+          <span class="signal-ghost" aria-hidden="true">CONTATO</span>
+          <div class="sticker-medal"><canvas class="sticker-canvas" data-sticker="telefone" width="500" height="500" role="img" aria-label="Telefone antigo tocando, representando a busca manual por status"></canvas></div>
+          <div class="signal-copy">
+          <p class="mono signal-meta">09:15 · A EQUIPE NO TELEFONE</p>
+          <h3>Horas caçando despachante e motorista</h3>
+          <p>A equipe perde a manhã ligando para transportadora, posto e motorista para conseguir um status que já deveria estar no painel.</p>
+          <p class="signal-note">fricção · contatos repetidos</p>
+          </div>
+        </li>
+        <li class="signal-card signal-card--doca">
+          <span class="folio" aria-hidden="true">III</span>
+          <span class="signal-ghost" aria-hidden="true">JANELA</span>
+          <div class="sticker-medal"><canvas class="sticker-canvas" data-sticker="doca" width="500" height="500" role="img" aria-label="Caminhão de carga parado com alerta de horário e cone de retenção, representando a doca parada e a janela perdida"></canvas></div>
+          <div class="signal-copy">
+          <p class="mono signal-meta">10:30 · A DOCA PARADA</p>
+          <h3>Equipe ociosa e caminhão fora de hora</h3>
+          <p>O CD preparou a doca para as 08h. A carga chega de surpresa no fim da tarde, gerando fila na portaria, cobrança de diárias e retrabalho.</p>
+          <p class="signal-note">efeito · janela perdida</p>
+          </div>
+        </li>
+          </ol>
+          <div class="signal-scroll-footer" aria-live="polite">
+          <p class="mono"><span data-signal-current>01</span> / 03 · <span data-signal-label>o cliente cobrando</span></p>
+          <div class="signal-scroll-progress" aria-hidden="true"><span></span><span></span><span></span></div>
+          </div>
+        </div>
+      </section>
+      <div class="consequence">
+        <p class="mono">O CUSTO DO VÁCUO DE INFORMAÇÃO</p>
+        <p>O prejuízo não são só as horas na estrada. São contatos repetidos, janelas perdidas e decisões tardias — porque a informação está em algum lugar; o contexto compartilhado, muitas vezes, não.</p>
+        <a class="text-link" href="#como-funciona">Veja o que muda quando o contexto é compartilhado <svg class="od-icon" aria-hidden="true"><use href="#i-down"/></svg></a>
+      </div>
+    </section>
+
+    <!-- =================================================================
+         SEÇÃO 02 · COMO FUNCIONA: A RECONCILIAÇÃO
+         Ato pinado em quatro tempos, na gramática de movimento da marca:
+         surgir, conectar, propagar, estabilizar. As quatro linhas harmônicas
+         atravessam os documentos autônomos e acendem em lavanda cada
+         divergência, sem unificar nem substituir sistema algum.
+         ================================================================= -->
+    <div class="paper-tear paper-tear--into-dark" aria-hidden="true">
+      <img src="assets/shopify-tear-top.png" alt="">
+    </div>
+    <section class="rec-section" id="como-funciona" data-sc-act="pin" data-sc-span="4.4" data-sc-drift="#0B211D" aria-labelledby="rec-title">
+      <div class="sc-stage rec-stage" data-sc-stage>
+        <div class="rec-stone" aria-hidden="true"></div>
+
+        <div class="rec-tableau" aria-hidden="true">
+          <svg class="rec-lines" viewBox="0 0 1200 700" preserveAspectRatio="none">
+            <path class="rec-line rec-line--1" pathLength="1" d="M-20,180 C240,150 420,210 640,185 C860,160 1040,200 1220,175"/>
+            <path class="rec-line rec-line--2" pathLength="1" d="M-20,320 C200,350 460,290 700,325 C920,355 1080,300 1220,330"/>
+            <path class="rec-line rec-line--3" pathLength="1" d="M-20,460 C260,430 440,490 680,455 C900,425 1060,480 1220,450"/>
+            <path class="rec-line rec-line--4" pathLength="1" d="M-20,580 C220,610 480,555 720,585 C940,612 1100,565 1220,590"/>
+          </svg>
+
+          <article class="rec-doc rec-doc--nfe">
+            <header><span class="rec-doc-tag">NF-e 3526</span><span class="rec-doc-src">SEFAZ · 20/01 06:14</span></header>
+            <p class="rec-doc-line"><span>Emitente</span><strong>Krona Eletrônicos</strong></p>
+            <p class="rec-doc-line"><span>Destino</span><strong>CD Anhanguera</strong></p>
+            <p class="rec-doc-line rec-div" style="--at:0.415"><span>Previsão</span><strong>20/01</strong></p>
+            <p class="rec-doc-line rec-div" style="--at:0.45"><span>Peso</span><strong>510 kg</strong></p>
+            <div class="rec-doc-barcode"></div>
+          </article>
+
+          <article class="rec-doc rec-doc--cte">
+            <header><span class="rec-doc-tag">CT-e 5211</span><span class="rec-doc-src">TRANSPORTADORA · 20/01 09:37</span></header>
+            <p class="rec-doc-line"><span>Tomador</span><strong>Krona Eletrônicos</strong></p>
+            <p class="rec-doc-line rec-div" style="--at:0.475"><span>Peso declarado</span><strong>520 kg</strong></p>
+            <p class="rec-doc-line rec-div" style="--at:0.50"><span>Volumes</span><strong>12</strong></p>
+            <p class="rec-doc-line"><span>NF-e vinculada</span><strong>3526</strong></p>
+            <div class="rec-doc-barcode"></div>
+          </article>
+
+          <article class="rec-doc rec-doc--planilha">
+            <header><span class="rec-doc-tag">Planilha do CD</span><span class="rec-doc-src">RECEBIMENTO · 21/01 08:10</span></header>
+            <div class="rec-sheet">
+              <p><span>3526</span><span>Krona</span><span class="rec-div" style="--at:0.525">prev. 25/01?</span></p>
+              <p><span>3519</span><span>PackSul</span><span>confere</span></p>
+              <p><span>3501</span><span>Fornec. Fictício</span><span>confere</span></p>
+            </div>
+          </article>
+
+          <article class="rec-doc rec-doc--canal">
+            <header><span class="rec-doc-tag">Busca ativa</span><span class="rec-doc-src">AGENTE FORSETI · 22/01 14:02</span></header>
+            <p class="rec-canal-msg"><span class="rec-canal-who">WhatsApp, transportadora</span>“A carga foi reconsolidada em Jundiaí. Sai amanhã no primeiro caminhão.”</p>
+            <p class="rec-canal-msg"><span class="rec-canal-who">Voz, CD Anhanguera</span>“Doca de quinta remanejada para segunda-feira.”</p>
+          </article>
+
+          <ul class="rec-setores">
+            <li style="--at:0.58">Fiscal</li>
+            <li style="--at:0.62">Transporte</li>
+            <li style="--at:0.66">CD</li>
+            <li style="--at:0.70">Financeiro</li>
+          </ul>
+        </div>
+
+        <header class="rec-beat rec-beat--1" data-sc-cue="0.02 0.225">
+          <p class="rec-kicker mono"><span class="rec-chapter">02</span> COMO FUNCIONA · SURGIR</p>
+          <h2 id="rec-title">Quatro fontes. Quatro versões do mesmo pedido.</h2>
+          <p>A NF-e diz uma data. O CT-e declara outro peso. A planilha do CD carrega uma terceira previsão. Nenhum sistema está errado: cada um registrou apenas o que viu.</p>
+        </header>
+
+        <header class="rec-beat rec-beat--2" data-sc-cue="0.27 0.49">
+          <p class="rec-kicker mono"><span class="rec-chapter">02</span> COMO FUNCIONA · CONECTAR</p>
+          <h2>A Forseti não substitui sistema nenhum.</h2>
+          <p>Ela atravessa os que você já tem. Linhas de coordenação leem NF-e, CT-e, planilhas e mensagens, e acendem em lavanda cada ponto onde as fontes divergem.</p>
+        </header>
+
+        <header class="rec-beat rec-beat--3" data-sc-cue="0.53 0.73">
+          <p class="rec-kicker mono"><span class="rec-chapter">02</span> COMO FUNCIONA · PROPAGAR</p>
+          <h2>A divergência vira busca ativa.</h2>
+          <p>O agente confirma a verdade operacional pelos canais que a transportadora já usa: WhatsApp, voz e e-mail. O contexto confirmado chega no mesmo instante a todos os setores.</p>
+        </header>
+
+        <header class="rec-beat rec-beat--4" data-sc-cue="0.77 1 0.15 0.02">
+          <p class="rec-kicker mono"><span class="rec-chapter">02</span> COMO FUNCIONA · ESTABILIZAR</p>
+          <h2>Uma versão compartilhada do pedido.</h2>
+          <p>Cada campo com fonte, horário e autor. Ao lado, a torre real da Forseti operando o pedido da Krona na base pública de demonstração.</p>
+        </header>
+
+        <figure class="rec-product" data-sc-cue="0.80 1 0.2 0.02">
+          <img src="assets/produto-torre-krona.png" alt="Captura real da torre Forseti: pedido da Krona Eletrônicos com entrega atrasada, divergências sinalizadas em lavanda e quinze tarefas distribuídas por setor" loading="lazy">
+          <figcaption class="mono">TORRE FORSETI · CAPTURA REAL DA DEMONSTRAÇÃO PÚBLICA</figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <!-- =================================================================
+         SEÇÃO 03 · O CASO: KRONA → CD ANHANGUERA
+         Panorama horizontal contínuo. O leitor acompanha um pedido real da
+         base de demonstração ao longo da rodovia, estação a estação, com a
+         fita asfáltica ligando os marcos.
+         ================================================================= -->
+    <section class="caso-section" id="caso" data-sc-act="pan" data-sc-span="4.6" data-sc-drift="#0A1D1A" aria-labelledby="caso-title">
+      <div class="sc-stage caso-stage" data-sc-stage>
+        <div class="caso-rail" data-sc-pan="0.06">
+
+          <header class="caso-intro">
+            <p class="rec-kicker mono"><span class="rec-chapter">03</span> O CASO</p>
+            <h2 id="caso-title">Krona Eletrônicos <span class="caso-arrow">→</span> CD Anhanguera</h2>
+            <p>Um pedido da base pública de demonstração, seguido do embarque à doca. Cada estação mostra o que a operação sabia naquele momento, e o que ela não sabia.</p>
+            <p class="caso-hint mono">A ESTRADA CONTINUA →</p>
+          </header>
+
+          <article class="caso-stop caso-stop--nfe">
+            <div class="caso-post mono"><span>KM 000</span><span>20/01 · 06:14</span></div>
+            <div class="caso-card">
+              <h3>A NF-e é emitida</h3>
+              <p>A Krona emite a NF-e 3526: dez volumes, 510 kg, entrega prevista para o mesmo dia no CD Anhanguera. Para o ERP, o pedido está resolvido.</p>
+              <div class="caso-evidence caso-evidence--doc"><span class="mono">NF-e 3526</span><span>10 vol · 510 kg</span><span>prev. 20/01</span></div>
+            </div>
+          </article>
+
+          <article class="caso-stop caso-stop--cte">
+            <div class="caso-post mono"><span>KM 042</span><span>20/01 · 09:37</span></div>
+            <div class="caso-card">
+              <h3>O CT-e discorda</h3>
+              <p>A transportadora emite o CT-e 5211 declarando 520 kg e doze volumes. Duas fontes oficiais, dois pesos. Nenhum sistema avisa ninguém.</p>
+              <div class="caso-evidence caso-evidence--diverge">
+                <span class="mono">NF-e × CT-e</span>
+                <span><b>510 kg</b> × <b>520 kg</b></span>
+                <span><b>10 vol</b> × <b>12 vol</b></span>
+              </div>
+            </div>
+          </article>
+
+          <article class="caso-stop caso-stop--busca">
+            <div class="caso-post mono"><span>KM 118</span><span>22/01 · 14:02</span></div>
+            <div class="caso-card">
+              <h3>A busca ativa encontra a exceção</h3>
+              <p>Dois dias sem sinal de chegada. O agente confirma por WhatsApp e voz: a carga foi reconsolidada em Jundiaí. A previsão real passa a ser 25/01, cinco dias além do prometido.</p>
+              <div class="caso-evidence caso-evidence--voice">
+                <span class="mono">CANAL: WHATSAPP · VOZ</span>
+                <span>“Reconsolidada em Jundiaí, sai no primeiro caminhão.”</span>
+                <span class="caso-evidence-verdict">nova previsão <b>25/01 · +5d</b></span>
+              </div>
+            </div>
+          </article>
+
+          <article class="caso-stop caso-stop--torre">
+            <div class="caso-post mono"><span>KM 150</span><span>22/01 · 14:06</span></div>
+            <div class="caso-card">
+              <h3>A decisão chega antes do caminhão</h3>
+              <p>Quatro minutos depois da confirmação, a torre já abriu quinze tarefas entre fiscal, financeiro, transporte e CD. A doca é reagendada antes de virar multa.</p>
+              <div class="caso-evidence caso-evidence--tasks">
+                <span class="mono">TORRE FORSETI</span>
+                <span><b>15</b> tarefas abertas</span>
+                <span><b>4</b> divergências com fonte</span>
+                <span>doca reagendada <b>sem diária</b></span>
+              </div>
+            </div>
+          </article>
+
+          <article class="caso-stop caso-stop--balanco">
+            <div class="caso-post mono"><span>CHEGADA</span><span>25/01 · 07:48</span></div>
+            <div class="caso-card">
+              <h3>O que mudou</h3>
+              <p>Sem troca de sistema, sem instalação na transportadora. A diferença foi uma só: todos passaram a trabalhar na mesma versão do pedido, com fonte e horário em cada campo.</p>
+              <div class="caso-evidence caso-evidence--ledger">
+                <span class="mono">NF-e × CT-e × PLANILHA</span>
+                <span>reconciliadas <b>22/01 · 14:06</b></span>
+                <span>autor e origem em cada correção</span>
+              </div>
+            </div>
+          </article>
+
+          <footer class="caso-outro">
+            <p class="mono">CENÁRIO DA BASE DE DEMONSTRAÇÃO PÚBLICA DA FORSETI</p>
+            <p>Números reais do pedido seed da Krona. Nenhum dado de cliente.</p>
+          </footer>
+
+          <div class="caso-road" aria-hidden="true"><span class="caso-road-line"></span></div>
+        </div>
+      </div>
+    </section>
+    <div class="paper-tear paper-tear--into-light" aria-hidden="true">
+      <img src="assets/shopify-tear-bottom.png" alt="">
+    </div>
+
+    <!-- =================================================================
+         SEÇÃO 04: ADERÊNCIA OPERACIONAL (CONSOLE EDITORIAL)
+         Mecânica Scroll-Craft: data-sc-in com data-sc-tilt e data-sc-spotlight
+         ================================================================= -->
+    <!-- =================================================================
+         SEÇÃO 04: PERFIL DE ADERÊNCIA
+         Monólitos Arquitetônicos de Pedra e Metal com data-sc-tilt="5"
+         ================================================================= -->
+    <section class="section shell fit-section" id="para-quem" aria-labelledby="fit-title">
+      <div class="section-intro" data-sc-in>
+        <p class="eyebrow"><span class="chapter-index">04</span> PERFIL DE ADERÊNCIA</p>
+        <h2 id="fit-title">Para quem a Forseti foi desenhada.</h2>
+        <p>Aderência honesta: onde a camada de coordenação faz diferença, e onde não é o foco.</p>
+      </div>
+
+      <div class="fit-monoliths" data-sc-in data-sc-stagger="90">
+
+        <!-- Monólito 1 -->
+        <article class="fit-monolith" data-sc-tilt="5" data-sc-spotlight>
+          <div class="monolith-head">
+            <span class="mono monolith-id">01 / INDÚSTRIA & EMBARCADOR</span>
+            
+          </div>
+          <h3>Embarcadores com várias transportadoras</h3>
+          <p>Para indústrias que contratam frotas terceirizadas de perfis muito diferentes, de grandes transportadoras com telemetria a empresas regionais que operam por telefone e WhatsApp.</p>
+          <ul class="monolith-features">
+            <li><strong>Menos caça manual:</strong> o agente faz os contatos repetidos no lugar da equipe.</li>
+            <li><strong>Visibilidade unificada:</strong> todas as frotas reconciliadas em uma única torre.</li>
+            <li><strong>Fonte em cada campo:</strong> de onde veio cada status, com horário e autor.</li>
+          </ul>
+          
+        </article>
+
+        <!-- Monólito 2 -->
+        <article class="fit-monolith" data-sc-tilt="5" data-sc-spotlight>
+          <div class="monolith-head">
+            <span class="mono monolith-id">02 / CARGAS CRÍTICAS & PERECÍVEIS</span>
+            
+          </div>
+          <h3>Operações com janela rígida de doca</h3>
+          <p>Para quem distribui com agendamento de descarga, onde a hora certa vale mais do que o dia certo: varejo, automotivo, químico, farmacêutico e centros de distribuição.</p>
+          <ul class="monolith-features">
+            <li><strong>Decisão antecipada:</strong> a exceção confirmada vira contexto antes de virar fila.</li>
+            <li><strong>Reagendamento com prova:</strong> a divergência chega ao CD com origem e horário.</li>
+            <li><strong>Prioridade visível:</strong> as tarefas críticas sobem na torre por impacto.</li>
+          </ul>
+          
+        </article>
+
+        <!-- Monólito 3 -->
+        <article class="fit-monolith" data-sc-tilt="5" data-sc-spotlight>
+          <div class="monolith-head">
+            <span class="mono monolith-id">03 / SUPPLY CHAIN & AUDITORIA</span>
+            
+          </div>
+          <h3>Times que precisam de histórico comprovável</h3>
+          <p>Para operações que disputam diárias e prazos com transportadoras e precisam mostrar, com evidência, quando a informação existiu e quem a confirmou.</p>
+          <ul class="monolith-features">
+            <li><strong>Linha do tempo com fonte:</strong> transcrições, carimbos e posições fiscais.</li>
+            <li><strong>Contestação com contexto:</strong> evidências organizadas por pedido e por trecho.</li>
+            <li><strong>Convivência com ERP:</strong> a camada atravessa os sistemas, não substitui.</li>
+          </ul>
+          
+        </article>
+
+      </div>
+
+      <aside class="fit-honest" data-sc-in>
+        <p class="mono">ONDE NÃO É O FOCO</p>
+        <p>Frota própria com telemetria completa já resolve parte do problema de visibilidade. Operações com uma única transportadora dedicada raramente têm vácuo de informação. A Forseti existe para a malha terceirizada e fragmentada, onde nenhum sistema enxerga o todo.</p>
+      </aside>
+    </section>
+
+    <!-- =================================================================
+         SEÇÃO 05: PERGUNTAS FREQUENTES
+         ================================================================= -->
+    <section class="section shell faq" id="faq" aria-labelledby="faq-title">
+      <div class="section-intro" data-sc-in>
+        <h2 id="faq-title">Perguntas frequentes</h2>
+        <p>Transparência técnica sobre integração, rotina e convivência de sistemas.</p>
+      </div>
+      <div class="faq-list" data-sc-in data-sc-stagger="60">
+        <details><summary>A Forseti substitui nosso ERP, TMS ou WMS atual?<svg class="od-icon" aria-hidden="true"><use href="#i-plus"/></svg></summary><p>Não. A Forseti opera como camada de coordenação e busca ativa ao lado dos seus sistemas existentes, consumindo NF-e e CT-e sem exigir substituição nem migrações traumáticas.</p></details>
+        <details><summary>Como a plataforma busca dados de transportadoras sem API nem portal?<svg class="od-icon" aria-hidden="true"><use href="#i-plus"/></svg></summary><p>Através de agentes autônomos treinados para interagir pelos mesmos canais que a transportadora já usa no dia a dia: WhatsApp, telefone e e-mail operacional, transcrevendo e validando cada informação.</p></details>
+        <details><summary>Os transportadores parceiros precisam instalar novos softwares?<svg class="od-icon" aria-hidden="true"><use href="#i-plus"/></svg></summary><p>Zero instalação e zero barreira. O parceiro responde aos contatos nos canais habituais da sua rotina.</p></details>
+        <details><summary>O que o histórico auditável da Forseti comprova?<svg class="od-icon" aria-hidden="true"><use href="#i-plus"/></svg></summary><p>Comprova a cronologia imutável da entrega: fonte original, canal de contato, horário exato, gravação de áudio e evidências seladas para proteger sua empresa em disputas de diárias.</p></details>
+      </div>
+    </section>
+
+    <!-- =================================================================
+         SEÇÃO 06: DIAGNÓSTICO OPERACIONAL (CONTATO NOBRE)
+         ================================================================= -->
+    <section class="contact-band section" id="contato" aria-labelledby="contato-title">
+      <div class="shell contact-grid" data-sc-in>
+        <div class="contact-copy">
+          <p class="eyebrow"><span class="harmonic-mark" aria-hidden="true"></span> DIAGNÓSTICO OPERACIONAL</p>
+          <h2 id="contato-title">Vamos entender onde sua malha perde contexto.</h2>
+          <p class="lead">Conte brevemente como suas entregas operam hoje. Desenhamos um mapa de vácuos de informação da sua cadeia sem nenhum compromisso.</p>
+          <ol class="contact-roadmap">
+            <li><span class="mono">01</span><div><strong>Você descreve a exceção recorrente</strong><p>Sem dados confidenciais: apenas a divergência ou tipo de atraso que mais sobrecarrega sua equipe.</p></div></li>
+            <li><span class="mono">02</span><div><strong>Mapeamos os pontos cegos dos parceiros</strong><p>Identificamos onde o status congela e quais decisões poderiam ser antecipadas.</p></div></li>
+            <li><span class="mono">03</span><div><strong>Avaliamos o potencial de piloto</strong><p>Se fizer sentido mútuo, definimos um escopo reduzido para demonstrar economia na prática.</p></div></li>
+          </ol>
+        </div>
+        <form id="contact-form" class="contact-form" novalidate data-sc-spotlight>
+          <h3>Solicitar diagnóstico da minha operação</h3>
+          <p class="form-note" id="form-note">Demonstração pública: respondemos com o mapa de vácuos do cenário descrito.</p>
+          <div class="form-field od-field"><label for="nome">Nome</label><input id="nome" name="nome" autocomplete="name" required maxlength="120" aria-describedby="nome-erro"><span id="nome-erro" class="field-error" hidden></span></div>
+          <div class="form-field od-field"><label for="email">E-mail corporativo</label><input id="email" name="email" type="email" inputmode="email" spellcheck="false" autocomplete="email" required maxlength="200" aria-describedby="email-erro"><span id="email-erro" class="field-error" hidden></span></div>
+          <div class="form-field od-field"><label for="empresa">Empresa</label><input id="empresa" name="empresa" autocomplete="organization" required maxlength="120" aria-describedby="empresa-erro"><span id="empresa-erro" class="field-error" hidden></span></div>
+          <div class="form-field od-field"><label for="cenario">Qual gargalo consome mais tempo hoje? <span class="optional">(opcional)</span></label><textarea id="cenario" name="cenario" rows="3" maxlength="600" aria-describedby="cenario-dica" placeholder="Ex.: temos 8 transportadoras terceirizadas e passamos o dia ligando para saber se a carga chega na doca…"></textarea><span id="cenario-dica" class="form-note">Descreva a situação sem incluir dados sensíveis.</span></div>
+          <button type="submit" class="button" id="form-send">Enviar meu cenário para diagnóstico <svg class="od-icon" aria-hidden="true"><use href="#i-arrow"/></svg></button>
+          <p class="form-status" id="form-status" aria-live="polite" hidden></p>
+        </form>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="site-footer">
+    <div class="shell footer-inner">
+      <div><a class="brand" href="#inicio" aria-label="Forseti, início"><img src="assets/forseti-logo-claro.svg" width="1460" height="356" alt="Forseti"></a><p>Visibilidade centralizada e coordenação de entregas B2B.</p><p class="footer-note">Cenários e dados operacionais nesta página são demonstrativos.</p></div>
+      <div class="footer-links"><a href="#caso">Caso prático</a><a href="#contato">Contato</a><a href="#inicio">Voltar ao topo <svg class="od-icon" aria-hidden="true"><use href="#i-up"/></svg></a></div>
+      <small class="mono">© 2026 FORSETI · Todos os direitos reservados</small>
+    </div>
+  </footer>
+<script src="connection.js?v=chat-loop-1" defer></script>
+  <script src="assets/scrollcraft.js"></script>
+  <script>
+    document.addEventListener("DOMContentLoaded", function() {
+      if (window.ScrollCraft && typeof window.ScrollCraft.mount === "function") {
+        window.ScrollCraft.mount();
+        console.log("ScrollCraft mounted successfully!");
+      }
+    });
+  </script>
+</body>
+</html>
