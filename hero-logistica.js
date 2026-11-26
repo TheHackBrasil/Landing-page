@@ -93,7 +93,7 @@
       maxY = Math.max(maxY,mask.y+mask.height*.5+mask.slopes[0]*half+38);
     });
     const ref = referenceCenter;
-    const height = Math.max(
+    let height = Math.max(
       (ref[1]-minY)*unitsPerPixel,
       (maxY-ref[1])*unitsPerPixel,
       (ref[0]-minX)*unitsPerPixel/aspect,
